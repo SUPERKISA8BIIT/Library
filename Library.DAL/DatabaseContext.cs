@@ -1,5 +1,4 @@
-﻿
-using Library.DAL.Models;
+﻿using Library.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,12 +12,10 @@ public class DatabaseContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     }
 
     public DbSet<Book> Books { get; set; } = default!;
-
-    public static async Task SeedDataAsync(DatabaseContext dbContext)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        await dbContext.Database.EnsureCreatedAsync();
-        await dbContext.SaveChangesAsync();
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Book>().HasIndex(u => u.ISBN).IsUnique();
     }
-
-
 }
